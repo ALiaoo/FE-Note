@@ -8,7 +8,7 @@ update react-element checkbox时，新增需求是对CheckboxGroup进行可选�
 ## 2.使用
 
 ### 2.1 在顶层元素中定义和赋值
-```
+```jsx
 class CheckboxGroup extends React.Component {
   //为context对象的属性赋值
   getChildContext() {
@@ -29,7 +29,7 @@ CheckboxGroup.propTypes = {
 ```
 
 ### 2.2 在子组件中声明contextTypes及使用context获取数据
-```
+```jsx
 class CheckBox extends React.Component {
   onChange(e) {
     //通过this.context来调用

@@ -1,6 +1,5 @@
 # weex conclution
-Weex是阿里开源的一套高性能跨平台移动开发框架。通过前端语法实现同一份代码，在ios，android和web下都能完整工作。weex的开发尝试，旨在发现使用weex开发的可实现范围和存在的局限。
-迁移自：https://yiqixie.com/d/home/fcAC2fNnUXO4Vl_CofdIN6UMh
+Weex是阿里开源的一套高性能跨平台移动开发框架。通过前端语法实现同一份代码，在ios，android和web下都能完整工作。weex仿早餐页面，发现使用weex开发的可实现范围和存在的局限。
 
 ## 1. 开发语言的选择
 weex从Weex从0.9.5版本开始集成了Vue.js的框架代码，将Vue2.0作为内置的前端框架，并强推用vue 2.0语法来开发native应用。
@@ -27,7 +26,7 @@ playground是官方提供的对weex文件预览的工具，将该App安装在And
 
 ### 2.2 使用weex命令编译.we/.vue文件
 使用weex breakfast.we 或者 weex breakfast.vue执行编译，会自动在chrome打开一个页面，网页下方有一
-个二维     码，再借助playground来扫码查看页面。
+个二维码，再借助playground来扫码查看页面。
 
 ### 2.3 调试weex页面
 *   启动debug server。执行命令weex debug  ，chrome浏览器会自动打开weex devtool的页面，网页下方有
@@ -47,26 +46,128 @@ playground是官方提供的对weex文件预览的工具，将该App安装在And
 ### 3.1 顶部日期栏在列表向上滑动时sticky到顶部，并横向滚动日期菜单
 使用<list>组件支持最外层的滚动。直接内嵌子组件<header>，header组件在到达屏幕顶部时，会吸附在屏
 幕顶部。<header>组件内放入一个横向滚动的<scroller>来支持日期菜单横向滚动。
+```
+<template>
+	<div class="container">
+		<list>
+      <cell>
+      	<slider class="slider" interval="3000" auto-play="false">
+      		<div class="slider-pages" repeat="{{itemList}}">
+      			<image class="slider-img" src="{{pictureUrl}}"></image>
+      		</div>
+      	</slider>
+      </cell>
+			<header>
+	      <div class="header">
+	        <scroller scroll-direction="horizontal" class="menuScroller">
+          	<div repeat="{{menuList}}" class="weekCell {{menuIndex == $index ? 'active_menu' : 'normal_menu'}}" onclick="onWeekCellClick($index)">
+          		<text style="font-size: 30px;">{{ title }}</text>
+          		<text class="header-menu-item-desc">{{ description }}</text>
+          	</div>
+          </scroller>
+	      </div>
+	    </header>
+      <cell>
+        //餐品列表
+      </cell>
+    </list>
+  </div>
+</template>
+```
 ### 3.2 餐品列表区域侧滑
 餐品列表的侧滑的实现通过监听Swipe手势，当用户在屏幕上滑动时触发，一次连续的滑动只触发一次swiper
 手势，在handleSwipe方法中，通过eventProperties参数来获取到滑动的方向，通过判断用户滑动的左右滑动
 方向来更新当前激活的日期菜单项并更新对应的餐品数据。
+```
+<template>
+	<div class="container">
+		<list>
+      <cell>
+      	<slider class="slider" interval="3000" auto-play="false">
+      		//banner
+      	</slider>
+      </cell>
+			<header>
+	      //header container
+	    </header>
+      <cell class="foodItemContainer" repeat="{{foods in menuList[menuIndex].newFoods}}" if="true">
+				<div class="foodItem" repeat="{{ item in foods}}" onclick="onFoodItemClick(item.name)" onswipe="handleSwipe" >
+				  //...
+				</div>
+      </cell>
+    </list>
+  </div>
+</template>
+<script>
+  module.exports = {
+		data: {
+			menuIndex: 0, //当前选中菜单的索引值
+		},
+		method: {
+			handleSwipe: function(eventProperties) {
+				if (eventProperties.direction == 'left') {
+					this.menuIndex =  this.menuIndex + 1 > this.menuList.length ? this.menuIndex : this.menuIndex + 1;
+				} else if (eventProperties.direction == 'right') {
+					this.menuIndex = this.menuIndex - 1 < 0 ? this.menuIndex : this.menuIndex - 1;
+				}
+			},    
+		}
+  }
+</script>
+```
 ### 3.3 小球抛落动画
-图
+使用Transform在transform中添加贝塞尔曲线cubic-bezier的timing-function实现小球抛落的效果
+<script>
+var animation = weex.requireModule('animation');
+module.exports = {
+	method: {
+		onroll: function() {
+			animation.transition(this.$el('ballWrapper'), {
+				styles: {
+					color: '#FF0000',
+					transform: 'translate(400px, 0)',
+					transformOrigin: 'center center',
+				},
+				duration: 500,
+				timingFunction: 'linear',
+				delay: 0
+			}, () => {
+				//callback
+			});
+
+			animation.transition(this.$el('ball'), {
+				styles: {
+					color: '#FF0000',
+					transform: 'translate(0, 800px)',
+					transformOrigin: 'center center',
+				},
+				duration: 500,
+				timingFunction: 'cubic-bezier(1, 0, 1, 1)',
+				delay: 0
+			}, () => {
+				//callback
+			});
+		},
+	}
+}
+</script>
 ### 3.4 购物车容器和餐品详细内容页
 Weex目前不支持z-index设置元素层级关系，但靠后的元素层级更高，所以对于层级高的元素可将它放在后
 面。如购物车容器和餐品详细内容页都是覆盖在餐品列表之上。
 
 ## 4. 存在的问题
 *   同向滚动。Weex目前不支持同方向的<list>或者 <scroller>互相嵌套。
-*   Weex目前没有提供滚动监听的Api，且在Android上不支持在滚动类型的元素上监听手势，就阻碍了一些方法的实现。
+*   Weex目前没有提供滚动监听的Api，且在Android上不支持在滚动类型的元素上监听手势，阻碍了一些方法的实现。
 *   小球出现和落入购物车需获取定位位置，从而绘制曲线。目前Weex尚未提供相关Api：
-getBoundingClientRect，不能获取到元素的位置。
+getBoundingClientRect，不能获取到元素的坐标。
 *   选择楼宇页面的“地图打点”功能，需要根据环境分别使用native和js的sdk来实现
 
-## 5. Weex局限
-*   web端css属性，api支持不够，如果要实现某些特定的功能，就需要native配合，或者折中需求来达成。
+## 5. Weex优势和局限
+*   移动端开发人员可以通过简单的前端代码写出native的性能体验
+*   提供了playground，在集成到移动端之前，可以不用建立native工程，直接结合playground来开发调试和预览。
+*   web端css属性，api支持不够，如果要实现某些特定的功能，就需要native配合，或者折中需求。
 *   社区规模小，活跃人数少，填坑速度不够快。
 
 ## 6. Weex跟进
-*   对于web标准的支持，weex按照使用频率来跟进开发，目前虽然支持的并不够多元，但是也在不断更新和优化中。beta版本提的merge可以看出也在解决局限性的问题。
+*   对于web标准的支持，weex按照组件使用频率来跟进开发，目前虽然支持有限，但是在不断更新和支持。
+*   工具，调试，开发，渲染性能优化中。
