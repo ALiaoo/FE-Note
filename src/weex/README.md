@@ -50,10 +50,10 @@ playground是官方提供的对weex文件预览的工具，将该App安装在And
 <template>
 	<div class="container">
 		<list>
-      <cell>
-      	<slider class="slider" interval="3000" auto-play="false">
-      		<div class="slider-pages" repeat="{{itemList}}">
-      			<image class="slider-img" src="{{pictureUrl}}"></image>
+			<cell>
+				<slider class="slider" interval="3000" auto-play="false">
+					<div class="slider-pages" repeat="{{itemList}}">
+							<image class="slider-img" src="{{pictureUrl}}"></image>
       		</div>
       	</slider>
       </cell>
