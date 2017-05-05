@@ -42,7 +42,7 @@ playground是官方提供的对weex文件预览的工具，将该App安装在And
 使用weex compile  breakfast.we dist 命令对单个文件或整个项目的打包。将生成的js文件拷贝到android项
 目或者ios项目的assets目录下。
 
-## 3. 动能点的实现
+## 3. 功能点的实现
 ### 3.1 顶部日期栏在列表向上滑动时sticky到顶部，并横向滚动日期菜单
 使用<list>组件支持最外层的滚动。直接内嵌子组件<header>，header组件在到达屏幕顶部时，会吸附在屏
 幕顶部。<header>组件内放入一个横向滚动的<scroller>来支持日期菜单横向滚动。
@@ -50,26 +50,26 @@ playground是官方提供的对weex文件预览的工具，将该App安装在And
 <template>
 	<div class="container">
 		<list>
-      <cell>
-      	<slider class="slider" interval="3000" auto-play="false">
-      		<div class="slider-pages" repeat="{{itemList}}">
-      			<image class="slider-img" src="{{pictureUrl}}"></image>
-      		</div>
-      	</slider>
-      </cell>
+			<cell>
+				<silder class="slider" interval="3000" auto-play="false">
+					<div class="slider-pages" repeat="{{itemList}}">
+						<image class="slider-img" src="{{pictureUrl}}"></image>
+					</div>
+				</silder>
+			</cell>
 			<header>
-	      <div class="header">
-	        <scroller scroll-direction="horizontal" class="menuScroller">
-          	<div repeat="{{menuList}}" class="weekCell {{menuIndex == $index ? 'active_menu' : 'normal_menu'}}" onclick="onWeekCellClick($index)">
-          		<text style="font-size: 30px;">{{ title }}</text>
-          		<text class="header-menu-item-desc">{{ description }}</text>
-          	</div>
-          </scroller>
-	      </div>
-	    </header>
+				<div class="header">
+					<scroller scroll-direction="horizontal" class="menuScroller">
+						<div repeat="{{menuList}}" class="weekCell {{menuIndex == $index ? 'active_menu' : 'normal_menu'}}" onclick="onWeekCellClick($index)">
+							<text style="font-size: 30px;">{{ title }}</text>
+							<text class="header-menu-item-desc">{{ description }}</text>
+						</div>
+					</scroller>
+				</div>
+			</header>
 			<cell>
 				//餐品列表
-      </cell>
+			</cell>
 		</list>
 	</div>
 </template>
@@ -82,37 +82,38 @@ playground是官方提供的对weex文件预览的工具，将该App安装在And
 <template>
 	<div class="container">
 		<list>
-      <cell>
-      	<slider class="slider" interval="3000" auto-play="false">
-      		//banner
-      	</slider>
-      </cell>
+			<cell>
+				<silder class="slider" interval="3000" auto-play="false">
+					//banner container
+				</silder>
+			</cell>
 			<header>
-	      //header container
-	    </header>
-      <cell class="foodItemContainer" repeat="{{foods in menuList[menuIndex].newFoods}}" if="true">
-				<div class="foodItem" repeat="{{ item in foods}}" onclick="onFoodItemClick(item.name)" onswipe="handleSwipe" >
-				  //...
+				//header container
+			</header>
+			<cell class="foodItemContainer" repeat="{{foods in menuList[menuIndex].newFoods}}" if="true">
+				<div class="foodItem" repeat="{{ item in foods}}" onclick="onFoodItemClick(item.name)" onswipe="handleSwipe">
+					//...
 				</div>
-      </cell>
-    </list>
-  </div>
+			</cell>
+		</list>
+	</div>
 </template>
+
 <script>
-  module.exports = {
-		data: {
-			menuIndex: 0, //当前选中菜单的索引值
-		},
-		method: {
-			handleSwipe: function(eventProperties) {
-				if (eventProperties.direction == 'left') {
-					this.menuIndex =  this.menuIndex + 1 > this.menuList.length ? this.menuIndex : this.menuIndex + 1;
-				} else if (eventProperties.direction == 'right') {
-					this.menuIndex = this.menuIndex - 1 < 0 ? this.menuIndex : this.menuIndex - 1;
-				}
-			},    
+module.exports = {
+	data: {
+		menuIndex: 0;//当前选中菜单的索引值
+	},
+	method: {
+		handleSwipe: function(eventProperties) {
+			if (eventProperties.direction == 'left') {
+				this.menuIndex =  this.menuIndex + 1 > this.menuList.length ? this.menuIndex : this.menuIndex + 1;
+			} else if (eventProperties.direction == 'right') {
+				this.menuIndex = this.menuIndex - 1 < 0 ? this.menuIndex : this.menuIndex - 1;
+			}
 		}
-  }
+	}
+}
 </script>
 ```
 ### 3.3 小球抛落动画
