@@ -44,7 +44,8 @@ playground是官方提供的对weex文件预览的工具，将该App安装在And
 
 ## 3. 功能点的实现
 效果图:
-![image][1]
+<img width="260" height=“374” src="https://github.com/ALiaoo/FE-Note/blob/master/src/weex/screenshot/home.jpeg"></img>
+
 ### 3.1 顶部日期栏在列表向上滑动时sticky到顶部，并横向滚动日期菜单
 使用<list>组件支持最外层的滚动。直接内嵌子组件<header>，header组件在到达屏幕顶部时，会吸附在屏
 幕顶部。<header>组件内放入一个横向滚动的<scroller>来支持日期菜单横向滚动。
@@ -159,6 +160,13 @@ getBoundingClientRect，不能获取到元素的坐标。
 
 ## 6. Weex跟进
 *   对于web标准的支持，weex按照组件使用频率来跟进开发，目前虽然支持有限，但是在不断更新和支持。
-*   工具，调试，开发，渲染性能优化中。
+*   工具，渲染性能优化中。
 
-[1]: https://github.com/ALiaoo/FE-Note/blob/master/src/weex/screenshot/home.jpeg
+## 7. 友情链接
+[Weex references](https://weex.incubator.apache.org/cn/references/)
+
+[Weex github](https://github.com/apache/incubator-weex)
+
+[Weex 社区](http://www.weex.help)
+
+[Weex Issues](https://github.com/alibaba/weex/issues)
