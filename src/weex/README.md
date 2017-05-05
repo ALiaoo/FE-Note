@@ -43,77 +43,64 @@ playground是官方提供的对weex文件预览的工具，将该App安装在And
 目或者ios项目的assets目录下。
 
 ## 3. 功能点的实现
+效果图:
+![image][1]
 ### 3.1 顶部日期栏在列表向上滑动时sticky到顶部，并横向滚动日期菜单
 使用<list>组件支持最外层的滚动。直接内嵌子组件<header>，header组件在到达屏幕顶部时，会吸附在屏
 幕顶部。<header>组件内放入一个横向滚动的<scroller>来支持日期菜单横向滚动。
 ```jsx
 <template>
-	<div class="container">
-		<list>
-			<cell>
-				<silder class="slider" interval="3000" auto-play="false">
-					<div class="slider-pages" repeat="{{itemList}}">
-						<image class="slider-img" src="{{pictureUrl}}"></image>
-					</div>
-				</silder>
-			</cell>
-			<header>
-				<div class="header">
-					<scroller scroll-direction="horizontal" class="menuScroller">
-						<div repeat="{{menuList}}" class="weekCell {{menuIndex == $index ? 'active_menu' : 'normal_menu'}}" onclick="onWeekCellClick($index)">
-							<text style="font-size: 30px;">{{ title }}</text>
-							<text class="header-menu-item-desc">{{ description }}</text>
-						</div>
-					</scroller>
-				</div>
-			</header>
-			<cell>
-				//餐品列表
-			</cell>
-		</list>
-	</div>
+  <div class="container">
+    <list>
+      <header>
+        <div class="header">
+          <scroller scroll-direction="horizontal" class="menuScroller">
+            <div repeat="{{menuList}}" class="weekCell {{menuIndex == $index ? 'active_menu' : 'normal_menu'}}" onclick="onWeekCellClick($index)">
+              <text style="font-size: 30px;">{{ title }}</text>
+              <text class="header-menu-item-desc">{{ description }}</text>
+            </div>
+          </scroller>
+        </div>
+      </header>
+      <cell>
+        //餐品列表
+      </cell>
+    </list>
+  </div>
 </template>
 ```
 ### 3.2 餐品列表区域侧滑
 餐品列表的侧滑的实现通过监听Swipe手势，当用户在屏幕上滑动时触发，一次连续的滑动只触发一次swiper
 手势，在handleSwipe方法中，通过eventProperties参数来获取到滑动的方向，通过判断用户滑动的左右滑动
 方向来更新当前激活的日期菜单项并更新对应的餐品数据。
-``` jsx
+```jsx
 <template>
-	<div class="container">
-		<list>
-			<cell>
-				<silder class="slider" interval="3000" auto-play="false">
-					//banner container
-				</silder>
-			</cell>
-			<header>
-				//header container
-			</header>
-			<cell class="foodItemContainer" repeat="{{foods in menuList[menuIndex].newFoods}}" if="true">
-				<div class="foodItem" repeat="{{ item in foods}}" onclick="onFoodItemClick(item.name)" onswipe="handleSwipe">
-					//...
-				</div>
-			</cell>
-		</list>
-	</div>
+  <div class="container">
+    <list>
+      <cell class="foodItemContainer" repeat="{{foods in menuList[menuIndex].newFoods}}" if="true">
+        <div class="foodItem" repeat="{{ item in foods}}" onclick="onFoodItemClick(item.name)" onswipe="handleSwipe">
+         //...
+        </div>
+      </cell>
+    </list>
+  </div>
 </template>
 
 <script>
-module.exports = {
-	data: {
-		menuIndex: 0;//当前选中菜单的索引值
-	},
-	method: {
-		handleSwipe: function(eventProperties) {
-			if (eventProperties.direction == 'left') {
-				this.menuIndex =  this.menuIndex + 1 > this.menuList.length ? this.menuIndex : this.menuIndex + 1;
-			} else if (eventProperties.direction == 'right') {
-				this.menuIndex = this.menuIndex - 1 < 0 ? this.menuIndex : this.menuIndex - 1;
-			}
-		}
-	}
-}
+  module.exports = {
+    data: {
+      menuIndex: 0;//当前选中菜单的索引值
+    },
+    method: {
+      handleSwipe: function(eventProperties) {
+        if (eventProperties.direction == 'left') {
+          this.menuIndex =  this.menuIndex + 1 > this.menuList.length ? this.menuIndex : this.menuIndex + 1;
+        } else if (eventProperties.direction == 'right') {
+        this.menuIndex = this.menuIndex - 1 < 0 ? this.menuIndex : this.menuIndex - 1;
+        }
+      }
+    }
+  }
 </script>
 ```
 ### 3.3 小球抛落动画
@@ -122,41 +109,40 @@ module.exports = {
 <script>
 var animation = weex.requireModule('animation');
 module.exports = {
-	method: {
-		onroll: function() {
-			animation.transition(this.$el('ballWrapper'), {
-				styles: {
-					color: '#FF0000',
-					transform: 'translate(400px, 0)',
-					transformOrigin: 'center center',
-				},
-				duration: 500,
-				timingFunction: 'linear',
-				delay: 0
-			}, () => {
-				//callback
-			});
-
-			animation.transition(this.$el('ball'), {
-				styles: {
-					color: '#FF0000',
-					transform: 'translate(0, 800px)',
-					transformOrigin: 'center center',
-				},
-				duration: 500,
-				timingFunction: 'cubic-bezier(1, 0, 1, 1)',
-				delay: 0
-			}, () => {
-				//callback
-			});
-		},
-	}
-}
+  method: {
+    onroll: function() {
+      animation.transition(this.$el('ballWrapper'), {
+        styles: {
+          color: '#FF0000',
+          transform: 'translate(400px, 0)',
+          transformOrigin: 'center center',
+        },
+        duration: 500,
+        timingFunction: 'linear',
+        delay: 0
+      }, () => {
+        //callback
+      });
+      animation.transition(this.$el('ball'), {
+        styles: {
+          color: '#FF0000',
+          transform: 'translate(0, 800px)',
+          transformOrigin: 'center center',
+        },
+        duration: 500,
+        timingFunction: 'cubic-bezier(1, 0, 1, 1)',
+        delay: 0
+      }, () => {
+        //callback
+      });
+    }
+  }
 </script>
 ```
 ### 3.4 购物车容器和餐品详细内容页
 Weex目前不支持z-index设置元素层级关系，但靠后的元素层级更高，所以对于层级高的元素可将它放在后
 面。如购物车容器和餐品详细内容页都是覆盖在餐品列表之上。
+
 
 ## 4. 存在的问题
 *   同向滚动。Weex目前不支持同方向的<list>或者 <scroller>互相嵌套。
@@ -174,3 +160,5 @@ getBoundingClientRect，不能获取到元素的坐标。
 ## 6. Weex跟进
 *   对于web标准的支持，weex按照组件使用频率来跟进开发，目前虽然支持有限，但是在不断更新和支持。
 *   工具，调试，开发，渲染性能优化中。
+
+[1]: https://github.com/ALiaoo/FE-Note/blob/master/src/weex/screenshot/home.jpeg
