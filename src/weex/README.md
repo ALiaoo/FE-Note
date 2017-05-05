@@ -46,7 +46,7 @@ playground是官方提供的对weex文件预览的工具，将该App安装在And
 ### 3.1 顶部日期栏在列表向上滑动时sticky到顶部，并横向滚动日期菜单
 使用<list>组件支持最外层的滚动。直接内嵌子组件<header>，header组件在到达屏幕顶部时，会吸附在屏
 幕顶部。<header>组件内放入一个横向滚动的<scroller>来支持日期菜单横向滚动。
-```
+```jsx
 <template>
 	<div class="container">
 		<list>
@@ -78,7 +78,7 @@ playground是官方提供的对weex文件预览的工具，将该App安装在And
 餐品列表的侧滑的实现通过监听Swipe手势，当用户在屏幕上滑动时触发，一次连续的滑动只触发一次swiper
 手势，在handleSwipe方法中，通过eventProperties参数来获取到滑动的方向，通过判断用户滑动的左右滑动
 方向来更新当前激活的日期菜单项并更新对应的餐品数据。
-```
+``` jsx
 <template>
 	<div class="container">
 		<list>
@@ -117,6 +117,7 @@ playground是官方提供的对weex文件预览的工具，将该App安装在And
 ```
 ### 3.3 小球抛落动画
 使用Transform在transform中添加贝塞尔曲线cubic-bezier的timing-function实现小球抛落的效果
+```jsx
 <script>
 var animation = weex.requireModule('animation');
 module.exports = {
@@ -151,6 +152,7 @@ module.exports = {
 	}
 }
 </script>
+```
 ### 3.4 购物车容器和餐品详细内容页
 Weex目前不支持z-index设置元素层级关系，但靠后的元素层级更高，所以对于层级高的元素可将它放在后
 面。如购物车容器和餐品详细内容页都是覆盖在餐品列表之上。
