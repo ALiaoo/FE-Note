@@ -1,7 +1,7 @@
 # Promise conclution
 《JavaScript高级程序设计》的作者，Nicholas C.Zakas 说过，要想全面理解和掌握JavaScript，关键在于弄清楚它的历史、本质和局限性。学习Promise也是, 在了解它为什么而生之后,对他的核心和使用场景也更加顺其自然了.所以第一步先简单了解下使用Promise的目的.
 
-## 1. 为什么使用Promise
+## 为什么使用Promise
 一个开发场景: 有两个请求A和B顺序执行, B请求需要用到A请求的返回结果才能开始执行, 看下面这段代码示例:
 ```jsx
 ajax({
@@ -43,24 +43,60 @@ new Promise(function(resolve, rejected){
 ```
 对比两段代码, 在使用Promise后,第二个异步请求不用再嵌套在第一个异步请求的回调中.如果有第三个异步请求,在末尾添加一个then,然后把回调放在then里,可以简写表示为new Promise(A).then(B).then(C).catch()。Promise的这种then的链式调用的方式,解决了顺序执行的异步函数间层层嵌套的问题。
 
-## 2. 什么是Promise
-Promise是一个拥有then方法的对象,通过then的链式调用来控制异步操作与回调函数的流程.
+## 什么是Promise
+Promise是一个拥有then方法的对象,通过then的链式调用来控制异步操作与回调函数的流程,让程序的流程清晰可辨.Promise/A+是规范.
 *   state: 状态机
     *  三种状态: PENDING, FULFILLED, REJECTED
     *  状态变化方向: Promise的状态只有两种变化方向,只能从PENDING状态分别变更为FULFILLED或者REJECTED状态
-    *  触发状态变更的时机: 
-        ```
-        function fulfill(result) {
-            // state状态由PENDING修改为FULFILLED
-            state = FULFILLED;
-            value = result;
-        }
-        
-        function reject(error) {
-            // state状态由PENDING修改为FULFILLED
-            state = REJECTED;
-            value = error;
-        }
-        ```
+    *  触发状态变更的时机: 异步操作成功时,异步操作失败时
 *   value: 一旦状态变更为fulfilled或者rejected时存储的终值或者拒因
 *   handlers: 存储成功或失败下关联的回调函数
+一个简单的模拟:
+```
+function fulfill(result) {
+    // state状态由PENDING修改为FULFILLED
+    state = FULFILLED;
+    value = result;
+}
+function reject(error) {
+    // state状态由PENDING修改为FULFILLED
+    state = REJECTED;
+    value = error;
+}
+```
+
+## Promise怎么用
+### 创建一个Promise
+```
+function run() {
+    return new Promise(function(resolve, reject) {
+        if (/* success */) {
+            resolve(value)
+        } else {
+            reject(reason)
+        }
+    })
+}
+```
+>resolve(value): 
+    1.异步请求成功时调用 
+    2.更改了state——Promise的状态从PENDING变为FULFILLED 
+    3.将异步操作的结果value传递出去
+>reject(reason): 
+    1.异步请求失败时调用 
+    2.更改了state——Promise的状态从PENDING变为REJECTED 
+    3.将异步操作报错的原因reason传递出去
+```
+注意: 
+1. new Promise()会立即执行，所以最好放到一个函数中去调用 
+2.
+new Promise(function(resolve, reject) {
+    // 会把当前区域里的同步代码先执行完, 异步总是最后再执行
+})
+```
+
+### then
+
+## 4. 友情链接
+[Promise/A+规范](https://promisesaplus.com)
+
