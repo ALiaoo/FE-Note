@@ -64,7 +64,7 @@ function reject(error) {
 }
 ```
 
-## Promise怎么用
+## 怎么用
 ### 创建一个Promise
 ```
 function runAsyn() {
@@ -90,14 +90,40 @@ function runAsyn() {
     
 ```
 注意: 
-*   new Promise()会立即执行，所以最好放到一个函数中去调用 
-*   new Promise(function(resolve, reject) {
+1.   new Promise()会立即执行，所以最好放到一个函数中去调用 
+2.   new Promise(function(resolve, reject) {
         // 会把当前区域里的同步代码先执行完, 异步总是最后再执行
     })
 ```
 
-### then
+### Promise#then
 
-## 4. 友情链接
+```
+const promise = new Promise(function(resolve, rejected){
+})
+promise.then(onFulfilled, onRejected)
+```
+*   then的两个参数是可选的, 如果类型不是function,会直接被忽略掉
+*   Promise是FULFILLED状态的时候:
+    *  onFulfilled是function: onFulfilled会被立即调用, onFulfilled的第一个参数接收的是resolve吐出来的value
+    *  onFulfilled不是function: promise2在FULFILLED状态下取得的value和promise1的一样
+*   Promise是REJECTED状态的时候:
+    *  onRejected是function: onRejected会被立即调用, onRejected的第一个参数接收的是reject吐出来的reason
+    *  onRejected不是function: promise2在REJECTED状态下取得的reason和promise1的一样
+
+```
+注意: 
+1.   如果then里没有定义onRejected函数,那么promise会把error向下传递给catch
+2.   then的第二个参数onRejected即function(error){}可以补货异步操作的错误,Promise#catch(fuction(error))方法也可以捕获异步操作返回的错误,这两个方法的区别在于catch的写法还能捕获到then方法中的可能发生的错误,所以最好是把错误捕获放到catch里.
+     new Promise(function(resolve, reject){
+     }).then(funcion(value){
+        // some code
+     }).catch(function(error){
+        // 错误处理
+     })
+```
+
+## 4. 传送带
 [Promise/A+规范](https://promisesaplus.com)
+[Promise 核心源码](https://github.com/then/promise/blob/master/src/core.js)
 
